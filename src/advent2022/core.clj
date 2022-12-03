@@ -51,13 +51,22 @@
    :draw 3
    :lose 0})
 
-(def d2-shape-map
+(def d2-shapes
   "Map of values and winners"
   ;; | Rock | Paper | Scissors |
   ;; |------+-------+----------|
   ;; |  A   |  B    |   C      |
   ;; |  X   |  Y    |   Z      |
-  {:})
+	;; |  1   |  2    |   3      |
+  {:X {:elvish :A
+			 :beats :C
+			 :value 1}
+	 :Y {:elvish :A
+		 	 :beats :B
+		 	 :value 2}
+	 :Z {:elvish :C
+			 :beats :Z
+			 :value 3}})
 
 (defn split-whitespace
   "Split string at spaces"
@@ -75,13 +84,20 @@
     (mapv #(keywordize (split-whitespace %)) ; split + keywordize string
           input-vec)))                 ; and place back in map
 
-(defn eval-round
-  "Evaluate round and return score"
-  ([[abc xyz] score]
-  (println (str "Abc is " abc))        ;;debug
-  (println (str "Xyz is " xyz))        ;;debug
-  (println (str "current score: " score)))
-  ()) ;;debug
+	(defn determine-winner
+	[abc xyz]
+	(let [m (get xyz d2-shapes)
+				status (cond 
+								(= abc (:beats m)) :win
+								(= abc (:elvish m)) :draw
+								:else :lose)
+				score (+ (:value m) 
+									(:status d2-values))]
+									score))
+
+	(defn score-all-rounds
+	[rounds]
+	())
 
 (defn d2p1
   "Takes text file containing strategy guide and outputs your final score"
